@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">IRIS 365</string>
+    <string name="title_activity_main">IRIS 365</string>
+    <string name="package_name">com.iris365.app</string>
+    <string name="custom_url_scheme">com.iris365.app</string>
+</resources>

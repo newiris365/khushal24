@@ -5,25 +5,24 @@ dotenv.config();
 
 /**
  * Server Runtime Environment Schema
- * Validates critical environment variables at startup so missing configuration
- * fails loudly before requests are processed.
+ * Strictly validates required environment variables at boot time.
+ * If any required variables are missing or invalid, validateEnv() fails loudly
+ * and exits the process immediately.
  */
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().optional().default('5000'),
+  PORT: z.string().optional().default('4000'),
   NEXT_PUBLIC_SUPABASE_URL: z
-    .string()
-    .url({ message: 'NEXT_PUBLIC_SUPABASE_URL must be a valid HTTP/HTTPS URL' })
-    .optional(),
+    .string({ required_error: 'NEXT_PUBLIC_SUPABASE_URL is required' })
+    .url({ message: 'NEXT_PUBLIC_SUPABASE_URL must be a valid HTTP/HTTPS URL' }),
   SUPABASE_SERVICE_ROLE_KEY: z
-    .string()
-    .min(10, { message: 'SUPABASE_SERVICE_ROLE_KEY is required for backend services' })
-    .optional(),
+    .string({ required_error: 'SUPABASE_SERVICE_ROLE_KEY is required' })
+    .min(32, { message: 'SUPABASE_SERVICE_ROLE_KEY must be a valid JWT key (min 32 chars)' }),
   JWT_SECRET: z
-    .string()
-    .min(8, { message: 'JWT_SECRET must be at least 8 characters' })
-    .optional()
-    .default('default-iris365-jwt-secret-key-production'),
+    .string({ required_error: 'JWT_SECRET is required' })
+    .min(32, {
+      message: 'JWT_SECRET is required and must be at least 32 characters for security signature validation'
+    }),
   DATABASE_URL: z.string().optional()
 });
 
@@ -39,12 +38,14 @@ export function validateEnv(): EnvConfig {
   if (!result.success) {
     console.error('❌ FATAL: Invalid Server Environment Configuration:');
     console.error(JSON.stringify(result.error.flatten().fieldErrors, null, 2));
-    if (process.env.NODE_ENV === 'production') {
+
+    if (process.env.NODE_ENV !== 'test') {
+      console.error('💥 Server boot halted due to missing required environment variables.');
       process.exit(1);
     }
   }
 
-  validatedEnv = result.data || (process.env as unknown as EnvConfig);
+  validatedEnv = (result.success ? result.data : process.env) as EnvConfig;
   return validatedEnv;
 }
 

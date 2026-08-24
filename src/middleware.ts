@@ -14,22 +14,23 @@ export function middleware(request: NextRequest) {
     let targetDashboard = '/student';
 
     if (userRole) {
+      const normalizedRole = userRole.trim().toLowerCase();
       const roleMap: Record<string, string> = {
-        Student: '/student',
-        Teacher: '/teacher',
-        Faculty: '/teacher',
-        Admin: '/admin',
-        SuperAdmin: '/admin',
-        Director: '/director',
-        Warden: '/warden',
-        Security: '/security',
-        Vendor: '/canteen',
-        Driver: '/driver',
-        Parent: '/parent',
-        HOD: '/hod',
-        VP: '/vp'
+        student: '/student',
+        teacher: '/teacher',
+        faculty: '/teacher',
+        admin: '/admin',
+        superadmin: '/admin',
+        director: '/director',
+        warden: '/warden',
+        security: '/security',
+        vendor: '/canteen',
+        driver: '/driver',
+        parent: '/parent',
+        hod: '/hod',
+        vp: '/vp'
       };
-      targetDashboard = roleMap[userRole] || '/student';
+      targetDashboard = roleMap[normalizedRole] || '/student';
     }
 
     return NextResponse.redirect(new URL(targetDashboard, request.url));
