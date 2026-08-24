@@ -40,10 +40,15 @@ import { authMiddleware } from './middleware/auth';
 import { requireFeature } from './middleware/permissions';
 import { razorpayWebhook } from './controllers/campusCore';
 
+import { validateEnv } from './config/env';
+
 dotenv.config();
+validateEnv();
 
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
-  throw new Error('CRITICAL SECURITY VIOLATION: JWT_SECRET environment variable is required and must be at least 32 characters in length to prevent brute-force signature forgery!');
+  throw new Error(
+    'CRITICAL SECURITY VIOLATION: JWT_SECRET environment variable is required and must be at least 32 characters in length to prevent brute-force signature forgery!'
+  );
 }
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -56,9 +61,7 @@ const PORT = process.env.PORT || 4000;
 // Create HTTP server for Socket.io attachment
 const httpServer = http.createServer(app);
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
-  : [];
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()) : [];
 
 const checkCorsOrigin = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
   if (!origin) return callback(null, true);
@@ -197,12 +200,9 @@ canteenNs.on('connection', (socket) => {
       // Validate that user is allowed to track this order
       // Vendors and Admins from the same institution can track, otherwise the student who placed it.
       const isPrivileged = ['SuperAdmin', 'Admin', 'Vendor'].includes(user.role);
-      
-      const query = supabaseAdmin
-        .from('canteen_orders')
-        .select('id, student_id, institution_id')
-        .eq('id', orderId);
-        
+
+      const query = supabaseAdmin.from('canteen_orders').select('id, student_id, institution_id').eq('id', orderId);
+
       const { data: order, error } = await query.maybeSingle();
 
       if (error || !order) {
@@ -240,12 +240,16 @@ canteenNs.on('connection', (socket) => {
   socket.on('order_status_update', async (data: { orderId: string; status: string; institutionId: string }) => {
     const user = (socket as any).user;
     const allowedRoles = ['SuperAdmin', 'Admin', 'Vendor'];
-    if (!user || !allowedRoles.includes(user.role) || (user.role !== 'SuperAdmin' && user.institution_id !== data.institutionId)) {
+    if (
+      !user ||
+      !allowedRoles.includes(user.role) ||
+      (user.role !== 'SuperAdmin' && user.institution_id !== data.institutionId)
+    ) {
       logger.warn(`Unauthorized order_status_update attempt by user ${user?.id}`);
       socket.emit('error', { message: 'Unauthorized status update action' });
       return;
     }
-    
+
     // Broadcast to the specific order room and kitchen
     canteenNs.to(`order_${data.orderId}`).emit('status_changed', data);
     canteenNs.to(`kitchen_${data.institutionId}`).emit('queue_updated', data);
@@ -391,18 +395,22 @@ app.set('trust proxy', 1);
 app.use(helmet());
 app.use(cookieParser());
 
-app.use(cors({
-  origin: checkCorsOrigin,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Client-Device-ID', 'Cookie'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: checkCorsOrigin,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Client-Device-ID', 'Cookie'],
+    credentials: true
+  })
+);
 
-app.use(express.json({
-  verify: (req: any, res, buf) => {
-    req.rawBody = buf;
-  }
-}));
+app.use(
+  express.json({
+    verify: (req: any, res, buf) => {
+      req.rawBody = buf;
+    }
+  })
+);
 
 // Global rate limiter (500 req / 15 min per IP)
 app.use(globalLimiter);

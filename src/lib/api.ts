@@ -19,7 +19,7 @@ function subscribeTokenRefresh(cb: (token: string) => void) {
 }
 
 function onRefreshed(token: string) {
-  refreshSubscribers.forEach(cb => cb(token));
+  refreshSubscribers.forEach((cb) => cb(token));
   refreshSubscribers = [];
 }
 
@@ -30,7 +30,7 @@ function getAuthHeaders(): Record<string, string> {
   }
   const deviceId = typeof window !== 'undefined' ? localStorage.getItem('iris_client_device_id') : null;
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   };
 
   // Only inject sandbox fallback mock tokens in LOCAL DEVELOPMENT.
@@ -47,10 +47,12 @@ function getAuthHeaders(): Record<string, string> {
     if (!token) {
       if (window.location.pathname.includes('/warden')) {
         // Warden fallback token
-        token = 'mock-sandbox-jwt-token-value.eyJpZCI6ImIwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAxMiIsImluc3RpdHV0aW9uX2lkIjoiYTAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAxIiwicm9sZSI6IldhcmRlbiIsImVtYWlsIjoid2FyZGVuQHNpZXQuZWR1LmluIn0=';
+        token =
+          'mock-sandbox-jwt-token-value.eyJpZCI6ImIwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAxMiIsImluc3RpdHV0aW9uX2lkIjoiYTAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAxIiwicm9sZSI6IldhcmRlbiIsImVtYWlsIjoid2FyZGVuQHNpZXQuZWR1LmluIn0=';
       } else {
         // Default student fallback token
-        token = 'mock-sandbox-jwt-token-value.eyJpZCI6ImIwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwNiIsImluc3RpdHV0aW9uX2lkIjoiYTAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAxIiwicm9sZSI6IlN0dWRlbnQiLCJlbWFpbCI6ImtodXNoYWxAZ21haWwuY29tIn0=';
+        token =
+          'mock-sandbox-jwt-token-value.eyJpZCI6ImIwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwNiIsImluc3RpdHV0aW9uX2lkIjoiYTAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAxIiwicm9sZSI6IlN0dWRlbnQiLCJlbWFpbCI6ImtodXNoYWxAZ21haWwuY29tIn0=';
       }
     }
   }
@@ -153,7 +155,11 @@ function getFormattedUrl(endpoint: string): string {
   return `${API_BASE}${formattedEndpoint}`;
 }
 
-export async function apiGet<T = any>(endpoint: string, params?: Record<string, string>, cacheSeconds = 0): Promise<ApiResponse<T>> {
+export async function apiGet<T = unknown>(
+  endpoint: string,
+  params?: Record<string, string>,
+  cacheSeconds = 0
+): Promise<ApiResponse<T>> {
   try {
     const url = new URL(getFormattedUrl(endpoint), typeof window !== 'undefined' ? window.location.origin : undefined);
     if (params) {
@@ -167,25 +173,28 @@ export async function apiGet<T = any>(endpoint: string, params?: Record<string, 
 
     const response = await request(url.toString(), {
       method: 'GET',
-      headers,
+      headers
     });
 
     const json = await response.json();
     return json;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(`apiGet failed for ${endpoint}:`, err);
     dispatchFallbackEvent(endpoint);
     return { success: false, error: 'Connection failed. Please check if backend is running.' };
   }
 }
 
-export async function apiPost<T = Record<string, unknown>>(endpoint: string, body: unknown = {}): Promise<ApiResponse<T>> {
+export async function apiPost<T = Record<string, unknown>>(
+  endpoint: string,
+  body: unknown = {}
+): Promise<ApiResponse<T>> {
   try {
     const url = getFormattedUrl(endpoint);
     const response = await request(url, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify(body),
+      body: JSON.stringify(body)
     });
 
     const json = await response.json();
@@ -197,12 +206,15 @@ export async function apiPost<T = Record<string, unknown>>(endpoint: string, bod
   }
 }
 
-export async function apiPut<T = Record<string, unknown>>(endpoint: string, body: unknown = {}): Promise<ApiResponse<T>> {
+export async function apiPut<T = Record<string, unknown>>(
+  endpoint: string,
+  body: unknown = {}
+): Promise<ApiResponse<T>> {
   try {
     const response = await request(getFormattedUrl(endpoint), {
       method: 'PUT',
       headers: getAuthHeaders(),
-      body: JSON.stringify(body),
+      body: JSON.stringify(body)
     });
 
     return await response.json();
@@ -213,31 +225,31 @@ export async function apiPut<T = Record<string, unknown>>(endpoint: string, body
   }
 }
 
-export async function apiDelete<T = any>(endpoint: string): Promise<ApiResponse<T>> {
+export async function apiDelete<T = unknown>(endpoint: string): Promise<ApiResponse<T>> {
   try {
     const response = await request(getFormattedUrl(endpoint), {
       method: 'DELETE',
-      headers: getAuthHeaders(),
+      headers: getAuthHeaders()
     });
 
     return await response.json();
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(`apiDelete failed for ${endpoint}:`, err);
     dispatchFallbackEvent(endpoint);
     return { success: false, error: 'Connection failed. Please check if backend is running.' };
   }
 }
 
-export async function apiPatch<T = any>(endpoint: string, body: any = {}): Promise<ApiResponse<T>> {
+export async function apiPatch<T = unknown>(endpoint: string, body: unknown = {}): Promise<ApiResponse<T>> {
   try {
     const response = await request(getFormattedUrl(endpoint), {
       method: 'PATCH',
       headers: getAuthHeaders(),
-      body: JSON.stringify(body),
+      body: JSON.stringify(body)
     });
 
     return await response.json();
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(`apiPatch failed for ${endpoint}:`, err);
     dispatchFallbackEvent(endpoint);
     return { success: false, error: 'Connection failed. Please check if backend is running.' };
@@ -247,16 +259,16 @@ export async function apiPatch<T = any>(endpoint: string, body: any = {}): Promi
 /**
  * Fetch a binary blob (e.g. PDF report download)
  */
-export async function apiFetchBlob(endpoint: string, body?: any): Promise<Blob> {
+export async function apiFetchBlob(endpoint: string, body?: unknown): Promise<Blob> {
   try {
     const response = await request(getFormattedUrl(endpoint), {
       method: body ? 'POST' : 'GET',
       headers: getAuthHeaders(),
-      body: body ? JSON.stringify(body) : undefined,
+      body: body ? JSON.stringify(body) : undefined
     });
 
     return await response.blob();
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(`apiFetchBlob failed for ${endpoint}:`, err);
     dispatchFallbackEvent(endpoint);
     throw new Error('Connection failed. Please check if backend is running.');
@@ -287,7 +299,9 @@ export async function setFeatureToggles(institutionId: string, features: Feature
   return settingsApi('save_features', { institution_id: institutionId }, { features });
 }
 
-export async function getRolePermissions(institutionId: string): Promise<ApiResponse<{ permissions: ModulePermission[]; all_roles: string[]; all_modules: string[] }>> {
+export async function getRolePermissions(
+  institutionId: string
+): Promise<ApiResponse<{ permissions: ModulePermission[]; all_roles: string[]; all_modules: string[] }>> {
   return settingsApi('get_permissions', { institution_id: institutionId });
 }
 
@@ -295,7 +309,9 @@ export async function setRolePermissions(institutionId: string, permissions: Mod
   return settingsApi('save_permissions', { institution_id: institutionId }, { permissions });
 }
 
-export async function getMyPermissions(): Promise<ApiResponse<{ features: FeatureToggle[]; permissions: ModulePermission[] }>> {
+export async function getMyPermissions(): Promise<
+  ApiResponse<{ features: FeatureToggle[]; permissions: ModulePermission[] }>
+> {
   return settingsApi('my_permissions');
 }
 
@@ -320,7 +336,7 @@ async function settingsApi(action: string, queryParams?: Record<string, string>,
     const response = await fetch(`/api/settings?${urlParams.toString()}`, {
       method: body ? 'POST' : 'GET',
       headers,
-      body: body ? JSON.stringify(body) : undefined,
+      body: body ? JSON.stringify(body) : undefined
     });
 
     return await response.json();
@@ -360,11 +376,17 @@ export async function getAttendanceMethods(): Promise<ApiResponse<{ methods: Att
   return apiGet('/core/attendance/methods');
 }
 
-export async function updateAttendanceMethod(methodKey: string, isEnabled: boolean, config?: Record<string, any>): Promise<ApiResponse> {
+export async function updateAttendanceMethod(
+  methodKey: string,
+  isEnabled: boolean,
+  config?: Record<string, any>
+): Promise<ApiResponse> {
   return apiPut('/core/attendance/method', { method_key: methodKey, is_enabled: isEnabled, config });
 }
 
-export async function batchUpdateAttendanceMethods(methods: { method_key: string; is_enabled: boolean; config?: Record<string, any> }[]): Promise<ApiResponse> {
+export async function batchUpdateAttendanceMethods(
+  methods: { method_key: string; is_enabled: boolean; config?: Record<string, any> }[]
+): Promise<ApiResponse> {
   return apiPost('/core/attendance/methods/batch', { methods });
 }
 
@@ -372,7 +394,12 @@ export async function getAttendanceDevices(): Promise<ApiResponse<{ devices: Att
   return apiGet('/core/attendance/devices');
 }
 
-export async function registerAttendanceDevice(device: { device_name: string; device_type: string; device_serial: string; department_id?: string }): Promise<ApiResponse<{ device: AttendanceDevice }>> {
+export async function registerAttendanceDevice(device: {
+  device_name: string;
+  device_type: string;
+  device_serial: string;
+  department_id?: string;
+}): Promise<ApiResponse<{ device: AttendanceDevice }>> {
   return apiPost('/core/attendance/device', device);
 }
 
@@ -388,11 +415,41 @@ export async function getDeviceLogs(deviceId?: string): Promise<ApiResponse<{ lo
 // DATA IMPORT API
 // =========================================================================
 
-export async function importAttendanceRecords(records: { student_roll: string; subject: string; date: string; status: string; method?: string; time_slot?: string }[]): Promise<ApiResponse<{ imported: number; errors: number; error_details: { row: number; error: string }[] }>> {
+export async function importAttendanceRecords(
+  records: {
+    student_roll: string;
+    subject: string;
+    date: string;
+    status: string;
+    method?: string;
+    time_slot?: string;
+  }[]
+): Promise<ApiResponse<{ imported: number; errors: number; error_details: { row: number; error: string }[] }>> {
   return apiPost('/core/import/attendance', { records });
 }
 
-export async function importStudentProfiles(records: { name: string; email: string; roll_number: string; department_id?: string; semester?: number; batch_year?: string; dob?: string; gender?: string; phone?: string; guardian_name?: string; guardian_phone?: string; fingerprint_id?: string }[]): Promise<ApiResponse<{ imported: number; errors: number; error_details: { row: number; error: string }[]; imported_students: any[] }>> {
+export async function importStudentProfiles(
+  records: {
+    name: string;
+    email: string;
+    roll_number: string;
+    department_id?: string;
+    semester?: number;
+    batch_year?: string;
+    dob?: string;
+    gender?: string;
+    phone?: string;
+    guardian_name?: string;
+    guardian_phone?: string;
+    fingerprint_id?: string;
+  }[]
+): Promise<
+  ApiResponse<{
+    imported: number;
+    errors: number;
+    error_details: { row: number; error: string }[];
+    imported_students: any[];
+  }>
+> {
   return apiPost('/core/import/students', { records });
 }
-

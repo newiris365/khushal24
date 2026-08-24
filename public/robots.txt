@@ -1,0 +1,18 @@
+# IRIS 365 Search Engine Directives
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /admissions
+Allow: /contact
+Allow: /request-demo
+Disallow: /api/
+Disallow: /admin/
+Disallow: /student/
+Disallow: /teacher/
+Disallow: /warden/
+Disallow: /director/
+Disallow: /vp/
+Disallow: /hod/
+Disallow: /parent/
+
+Sitemap: https://app.iris365.io/sitemap.xml

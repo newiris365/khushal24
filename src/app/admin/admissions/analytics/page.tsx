@@ -1,10 +1,18 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { apiGet } from '../../../../lib/api';
-import { 
-  BarChart3, CheckCircle, AlertCircle, Loader2, Download, Printer, 
-  MapPin, Users, HelpCircle, ShieldCheck
+import {
+  BarChart3,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  Download,
+  Printer,
+  MapPin,
+  Users,
+  HelpCircle,
+  ShieldCheck
 } from 'lucide-react';
 
 interface FunnelItem {
@@ -35,8 +43,8 @@ export default function AdminAnalyticsPage() {
 
   async function loadAnalyticsData() {
     try {
-      const funnelRes = await apiGet('/admissions/analytics/funnel');
-      const reportRes = await apiGet('/admissions/reports/aishe');
+      const funnelRes = await apiGet<{ funnel: FunnelItem[] }>('/admissions/analytics/funnel');
+      const reportRes = await apiGet<{ report: AisheReport }>('/admissions/reports/aishe');
 
       if (funnelRes.success && funnelRes.funnel) {
         setFunnel(funnelRes.funnel);
@@ -95,7 +103,9 @@ export default function AdminAnalyticsPage() {
               </tr>
             </thead>
             <tbody>
-              ${report.metrics.map(m => `
+              ${report.metrics
+                .map(
+                  (m) => `
                 <tr>
                   <td style="text-align: left; font-weight: bold;">${m.degree}</td>
                   <td>${m.male}</td>
@@ -106,7 +116,9 @@ export default function AdminAnalyticsPage() {
                   <td>${m.general}</td>
                   <td style="font-weight: bold;">${m.male + m.female}</td>
                 </tr>
-              `).join('')}
+              `
+                )
+                .join('')}
             </tbody>
           </table>
           <script>window.print();</script>
@@ -130,9 +142,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
         {/* Left Column: Funnel Chart */}
         <div className="lg:col-span-2 rounded-3xl border border-white/5 bg-[#13102A]/40 p-6 shadow-xl space-y-6">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -150,11 +160,13 @@ export default function AdminAnalyticsPage() {
                     <span className="font-mono text-[#A78BFA]">{item.value.toLocaleString()}</span>
                   </div>
                   <div className="w-full h-7 rounded-lg bg-white/5 overflow-hidden relative flex items-center pl-3">
-                    <div 
+                    <div
                       className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#6C2BD9]/30 to-[#8B5CF6]/50 transition-all duration-500"
                       style={{ width: `${widthRatio}%` }}
                     />
-                    <span className="relative z-10 text-[9px] font-mono font-bold text-[#C4B5FD]">{widthRatio}% of top funnel</span>
+                    <span className="relative z-10 text-[9px] font-mono font-bold text-[#C4B5FD]">
+                      {widthRatio}% of top funnel
+                    </span>
                   </div>
                 </div>
               );
@@ -184,19 +196,28 @@ export default function AdminAnalyticsPage() {
               <div className="p-4 rounded-xl bg-[#0D0A1A]/80 border border-[#6C2BD9]/20 text-xs space-y-2">
                 <span className="text-[10px] text-[#C4B5FD]/45 font-mono uppercase block">ACTIVE REPORT BOUNDS</span>
                 <span className="font-bold text-white">{report.title}</span>
-                <span className="block text-[10px] text-[#A78BFA] font-mono">Academic Cycle: {report.academic_year}</span>
+                <span className="block text-[10px] text-[#A78BFA] font-mono">
+                  Academic Cycle: {report.academic_year}
+                </span>
               </div>
 
               <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1 scrollbar-thin">
                 {report.metrics.map((m, idx) => (
-                  <div key={idx} className="p-3 bg-[#0D0A1A]/50 border border-white/5 rounded-xl text-xs flex justify-between items-center">
+                  <div
+                    key={idx}
+                    className="p-3 bg-[#0D0A1A]/50 border border-white/5 rounded-xl text-xs flex justify-between items-center"
+                  >
                     <div>
                       <span className="font-bold text-white block">{m.degree}</span>
-                      <span className="text-[9px] text-[#C4B5FD]/50 block mt-0.5">M: {m.male} | F: {m.female}</span>
+                      <span className="text-[9px] text-[#C4B5FD]/50 block mt-0.5">
+                        M: {m.male} | F: {m.female}
+                      </span>
                     </div>
                     <div className="text-right">
                       <span className="text-[9px] text-[#C4B5FD]/50 block">Reservation</span>
-                      <span className="text-[10px] font-mono text-[#A78BFA]">SC:{m.sc} ST:{m.st} OBC:{m.obc}</span>
+                      <span className="text-[10px] font-mono text-[#A78BFA]">
+                        SC:{m.sc} ST:{m.st} OBC:{m.obc}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -212,7 +233,6 @@ export default function AdminAnalyticsPage() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );
