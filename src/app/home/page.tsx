@@ -1,13 +1,25 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
-  Search, MapPin, GraduationCap, School, Building2, ChevronRight,
-  Globe, Sparkles, Filter, AlertCircle, Loader2, BookOpen
+  Search,
+  MapPin,
+  GraduationCap,
+  School,
+  Building2,
+  ChevronRight,
+  Globe,
+  Sparkles,
+  Filter,
+  AlertCircle,
+  Loader2,
+  BookOpen
 } from 'lucide-react';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 interface Institution {
   id: string;
@@ -69,11 +81,13 @@ function InstitutionCard({ inst }: { inst: Institution }) {
 
         {/* Name + Type */}
         <div className="flex-1 min-w-0">
-          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border mb-1.5 ${
-            isSchool
-              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-              : 'bg-violet-500/10 border-violet-500/20 text-violet-400'
-          }`}>
+          <span
+            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border mb-1.5 ${
+              isSchool
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                : 'bg-violet-500/10 border-violet-500/20 text-violet-400'
+            }`}
+          >
             {isSchool ? <School className="w-3 h-3" /> : <GraduationCap className="w-3 h-3" />}
             {isSchool ? 'School' : 'College / University'}
           </span>
@@ -165,11 +179,12 @@ export default function ApplicantHomePage() {
   const tabs: { key: TabType; label: string; icon: React.ReactNode }[] = [
     { key: 'all', label: 'All', icon: <Building2 className="w-3.5 h-3.5" /> },
     { key: 'college', label: 'Colleges & Universities', icon: <GraduationCap className="w-3.5 h-3.5" /> },
-    { key: 'school', label: 'Schools', icon: <School className="w-3.5 h-3.5" /> },
+    { key: 'school', label: 'Schools', icon: <School className="w-3.5 h-3.5" /> }
   ];
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] text-white selection:bg-[#6C2BD9]/40">
+    <div className="min-h-screen bg-slate-950 dark:bg-slate-950 light:bg-slate-50 text-slate-100 dark:text-slate-100 light:text-slate-900 transition-colors duration-300">
+      <Header />
       {/* Background effects */}
       <div className="fixed top-0 left-1/4 w-[700px] h-[700px] bg-[#6C2BD9]/8 rounded-full blur-[160px] pointer-events-none" />
       <div className="fixed top-1/2 right-0 w-[500px] h-[500px] bg-[#8B5CF6]/5 rounded-full blur-[180px] pointer-events-none" />
@@ -189,7 +204,9 @@ export default function ApplicantHomePage() {
 
           {/* Nav links */}
           <div className="hidden sm:flex items-center gap-5 text-xs font-semibold text-[#C4B5FD]/70">
-            <Link href="/login" className="hover:text-white transition-colors">Staff Login</Link>
+            <Link href="/login" className="hover:text-white transition-colors">
+              Staff Login
+            </Link>
             <Link
               href="/login"
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#6C2BD9] to-[#8B5CF6] text-white font-bold hover:brightness-110 transition-all"
@@ -207,7 +224,9 @@ export default function ApplicantHomePage() {
           Admissions 2026–27 Now Open
         </div>
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-[#E0E7FF] to-[#A78BFA] bg-clip-text text-transparent leading-tight mb-4">
-          Find Your Institution,<br />Start Your Journey
+          Find Your Institution,
+          <br />
+          Start Your Journey
         </h1>
         <p className="text-[#C4B5FD]/60 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
           Browse colleges and schools, explore programmes, and apply directly — all in one place.
@@ -241,7 +260,9 @@ export default function ApplicantHomePage() {
             >
               <option value="">All Cities</option>
               {allCities.map((city) => (
-                <option key={city} value={city}>{city}</option>
+                <option key={city} value={city}>
+                  {city}
+                </option>
               ))}
             </select>
           </div>
@@ -303,7 +324,9 @@ export default function ApplicantHomePage() {
         {/* Loading skeletons */}
         {loading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         )}
 
@@ -319,7 +342,10 @@ export default function ApplicantHomePage() {
             </p>
             {(searchQuery || selectedCity) && (
               <button
-                onClick={() => { setSearchQuery(''); setSelectedCity(''); }}
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCity('');
+                }}
                 className="px-4 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all"
               >
                 Clear Filters
@@ -339,17 +365,7 @@ export default function ApplicantHomePage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/5 py-10 px-6 bg-[#090615] text-center">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#C4B5FD]/40">
-          <div className="flex items-center gap-2">
-            <Globe className="w-3.5 h-3.5 text-[#6C2BD9]" />
-            <span className="font-bold text-white/60">IRIS 365</span>
-            <span>— Applicant Portal</span>
-          </div>
-          <p>© 2026 KSL Studio. All rights reserved.</p>
-          <Link href="/login" className="hover:text-white transition-colors">Staff Login →</Link>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

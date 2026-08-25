@@ -1,224 +1,153 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Shield, GraduationCap, Menu, X } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolledTop, setIsScrolledTop] = useState(true);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('iris_theme') as 'dark' | 'light' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  const logoSrc = theme === 'light' ? '/iris_logo.jpeg' : '/dark_logo.jpeg';
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolledTop(window.scrollY < 100);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isHomeActive = pathname === '/' && isScrolledTop;
-  const isAboutActive = pathname === '/about';
-  const isContactActive = pathname === '/contact';
-  const isRequestDemoActive = pathname === '/request-demo';
-  const isModulesActive = pathname === '/modules';
-
-  const handleHomeClick = (e: React.MouseEvent) => {
-    if (pathname === '/') {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setMobileMenuOpen(false);
-    }
-  };
-
-  const getLinkClass = (isActive: boolean) => 
-    `relative py-2 text-xs uppercase tracking-wider font-semibold transition-colors hover:text-white ${
-      isActive ? 'text-white font-bold' : 'text-[#C4B5FD]/75'
-    }`;
-
-  const renderActiveUnderline = (isActive: boolean) => 
-    isActive && (
-      <span className="absolute bottom-[-18px] left-0 right-0 h-[2px] bg-[#8A2BE2] shadow-[0_0_8px_#8A2BE2] rounded-full"></span>
-    );
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/about', label: 'About' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/admissions', label: 'Admissions' },
+    { href: '/institutions', label: 'Institutions' },
+    { href: '/company', label: 'Company' },
+    { href: '/contact', label: 'Contact' }
+  ];
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full bg-[#0D0A1A]/85 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 flex items-center justify-between transition-all duration-300">
-      {/* Brand logo */}
-      <Link href="/" onClick={handleHomeClick} className="flex items-center gap-4 hover:opacity-90 transition-opacity">
-        {/* Stylized Hexagonal Iris Logo */}
-        <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shrink-0 border border-white/10">
-          <Image 
-            src={logoSrc} 
-            alt="IRIS 365 Logo" 
-            width={40}
-            height={40}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
-        {/* Brand Text */}
-        <span className="font-heading font-black text-2xl tracking-wide uppercase flex items-center gap-1.5 select-none">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C4B5FD] to-[#8B5CF6]">IRIS</span>
-          <span className="text-white">365</span>
-        </span>
-      </Link>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-slate-950/90 dark:bg-slate-950/90 light:bg-white/90 backdrop-blur-md border-b border-slate-800/80 dark:border-slate-800/80 light:border-slate-200/80 shadow-lg shadow-black/5 py-3.5'
+          : 'bg-transparent py-5'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center gap-3.5 group">
+          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-indigo-500/30 group-hover:border-indigo-500 transition-colors shadow-md shadow-indigo-500/10">
+            <Image
+              src="/icon-192.png"
+              alt="IRIS 365 Logo"
+              width={40}
+              height={40}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-heading font-extrabold text-xl tracking-tight text-white dark:text-white light:text-slate-900 flex items-center gap-1">
+              <span>IRIS</span>
+              <span className="text-indigo-400 font-mono">365</span>
+            </span>
+            <span className="text-[10px] font-mono tracking-wider text-slate-400 uppercase -mt-1">Campus OS</span>
+          </div>
+        </Link>
 
-      {/* Desktop Grouped Right Side: Nav + Divider + Actions */}
-      <div className="hidden xl:flex items-center gap-8">
-        <nav className="flex items-center gap-8">
-          <Link 
-            href="/" 
-            onClick={handleHomeClick}
-            className={getLinkClass(isHomeActive)}
-          >
-            <span>Home</span>
-            {renderActiveUnderline(isHomeActive)}
-          </Link>
-          
-          <Link href="/#features" className={getLinkClass(false)}>
-            <span>Features</span>
-          </Link>
-
-          <Link href="/modules" className={getLinkClass(isModulesActive)}>
-            <span>Modules</span>
-            {renderActiveUnderline(isModulesActive)}
-          </Link>
-          
-          <Link 
-            href="/about" 
-            className={getLinkClass(isAboutActive)}
-          >
-            <span>About Us</span>
-            {renderActiveUnderline(isAboutActive)}
-          </Link>
-          
-          <Link 
-            href="/contact" 
-            className={getLinkClass(isContactActive)}
-          >
-            <span>Contact Us</span>
-            {renderActiveUnderline(isContactActive)}
-          </Link>
-          
-          <Link 
-            href="/request-demo" 
-            className={getLinkClass(isRequestDemoActive)}
-          >
-            <span>Request Demo</span>
-            {renderActiveUnderline(isRequestDemoActive)}
-          </Link>
-          
-          <Link 
-            href="/home" 
-            className="flex items-center gap-1.5 text-[#06B6D4] hover:text-white transition-colors font-semibold text-xs uppercase tracking-wider"
-          >
-            <GraduationCap className="w-4 h-4 text-[#06B6D4]" /> 
-            <span>Apply Now</span>
-          </Link>
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-7">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 ${
+                  isActive
+                    ? 'text-indigo-400 font-bold'
+                    : 'text-slate-300 dark:text-slate-300 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-indigo-600'
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full shadow-sm shadow-indigo-500" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Vertical divider */}
-        <span className="h-5 w-[1px] bg-white/10 block"></span>
+        {/* Actions & Theme Toggle */}
+        <div className="hidden lg:flex items-center gap-4">
+          <ThemeToggle />
+          <Link
+            href="/login?fresh=1"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 dark:text-slate-300 light:text-slate-700 hover:text-white dark:hover:text-white light:hover:text-slate-900 bg-slate-900/60 dark:bg-slate-900/60 light:bg-slate-100 border border-slate-800 dark:border-slate-800 light:border-slate-200 hover:border-slate-700 transition-all"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/request-demo"
+            className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-all shadow-md shadow-indigo-600/25 flex items-center gap-1.5 active:scale-95"
+          >
+            <span>Request Demo</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3">
-          <Link href="/login?fresh=1" className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold tracking-wide transition-all">
-            Dashboard Sign In
-          </Link>
-          <Link href="/login?fresh=1" className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6C2BD9] to-[#8B5CF6] hover:brightness-110 text-xs font-bold tracking-wide transition-all shadow-md shadow-[#6C2BD9]/20">
-            Launch Portal →
-          </Link>
+        {/* Mobile Trigger */}
+        <div className="flex items-center gap-3 lg:hidden">
+          <ThemeToggle />
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-xl bg-slate-900/60 text-slate-300 hover:text-white border border-slate-800"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Trigger */}
-      <button 
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="xl:hidden text-[#C4B5FD] hover:text-white transition-colors p-1"
-        aria-label="Toggle menu"
-      >
-        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
-
-      {/* Mobile Dropdown Menu Drawer */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="absolute top-[68px] left-0 w-full bg-[#0D0A1A]/95 backdrop-blur-xl border-b border-white/8 py-6 px-8 flex flex-col gap-5 xl:hidden shadow-lg shadow-black/40 z-50">
-          <Link 
-            href="/" 
-            onClick={handleHomeClick}
-            className={`flex items-center gap-2 text-sm font-semibold tracking-wide ${isHomeActive ? 'text-[#06B6D4]' : 'hover:text-[#8B5CF6]'}`}
-          >
-            <span>Home</span>
-          </Link>
-          <Link 
-            href="/#features" 
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-sm font-semibold tracking-wide hover:text-[#8B5CF6]"
-          >
-            Features
-          </Link>
-          <Link 
-            href="/modules" 
-            onClick={() => setMobileMenuOpen(false)}
-            className={`text-sm font-semibold tracking-wide ${isModulesActive ? 'text-[#06B6D4]' : 'hover:text-[#8B5CF6]'}`}
-          >
-            Modules
-          </Link>
-          <Link 
-            href="/about" 
-            onClick={() => setMobileMenuOpen(false)}
-            className={`text-sm font-semibold tracking-wide ${isAboutActive ? 'text-[#06B6D4]' : 'hover:text-[#8B5CF6]'}`}
-          >
-            About Us
-          </Link>
-          <Link 
-            href="/contact" 
-            onClick={() => setMobileMenuOpen(false)}
-            className={`text-sm font-semibold tracking-wide ${isContactActive ? 'text-[#06B6D4]' : 'hover:text-[#8B5CF6]'}`}
-          >
-            Contact Us
-          </Link>
-          <Link 
-            href="/request-demo" 
-            onClick={() => setMobileMenuOpen(false)}
-            className={`text-sm font-semibold tracking-wide ${isRequestDemoActive ? 'text-[#06B6D4]' : 'hover:text-[#8B5CF6]'}`}
-          >
-            Request Demo
-          </Link>
-          <Link 
-            href="/home" 
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-1.5 text-[#06B6D4] text-sm font-semibold hover:text-white"
-          >
-            <GraduationCap className="w-4 h-4" /> Apply Now
-          </Link>
-          <hr className="border-white/5" />
-          <div className="flex flex-col gap-3">
-            <Link 
-              href="/login?fresh=1" 
+        <div className="lg:hidden fixed top-[68px] left-0 right-0 bg-slate-950/95 dark:bg-slate-950/95 light:bg-white/95 backdrop-blur-xl border-b border-slate-800 p-6 shadow-2xl flex flex-col gap-4 z-50">
+          <nav className="flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`text-sm font-semibold py-2 px-3 rounded-lg transition-colors ${
+                  pathname === link.href
+                    ? 'bg-indigo-600/10 text-indigo-400 font-bold'
+                    : 'text-slate-300 dark:text-slate-300 light:text-slate-700 hover:bg-slate-900'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="pt-4 border-t border-slate-800/80 flex flex-col gap-2.5">
+            <Link
+              href="/login?fresh=1"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-center py-2.5 rounded-xl border border-white/10 bg-white/5 text-xs font-semibold"
+              className="w-full text-center py-2.5 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-200 font-semibold text-xs"
             >
-              Dashboard Sign In
+              Sign In to Dashboard
             </Link>
-            <Link 
-              href="/login?fresh=1" 
+            <Link
+              href="/request-demo"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-center py-2.5 rounded-xl bg-gradient-to-r from-[#6C2BD9] to-[#8B5CF6] text-xs font-bold"
+              className="w-full text-center py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/25 flex items-center justify-center gap-2"
             >
-              Launch Portal →
+              <span>Request Interactive Demo</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

@@ -31,6 +31,67 @@ const verifySubscriptionSchema = z.object({
   razorpay_signature: z.string().optional()
 });
 
+const accountPlanSchema = z.object({
+  account_count: z.number().int().min(500, 'Minimum account count is 500'),
+  billing_cycle: z.enum(['monthly', 'annual']).default('monthly')
+});
+
+// ========== ACCOUNT-BASED PRICING CALCULATOR ==========
+router.post('/calculate-account-plan', async (req: Request, res: Response) => {
+  try {
+    const parse = accountPlanSchema.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ success: false, error: parse.error.errors[0].message });
+    }
+    const { account_count, billing_cycle } = parse.data;
+
+    const account_blocks = Math.max(1, Math.ceil(account_count / 500));
+    let tier: 'growth' | 'scale' | 'enterprise' = 'growth';
+    let base_rate_per_block = 99; // $99 per 500 accounts
+
+    if (account_count > 10000) {
+      tier = 'enterprise';
+      base_rate_per_block = 79;
+    } else if (account_count > 2500) {
+      tier = 'scale';
+      base_rate_per_block = 89;
+    }
+
+    const monthly_amount = account_blocks * base_rate_per_block;
+    const annual_discount_multiplier = 0.8; // 20% discount
+    const annual_amount_total = Math.round(monthly_amount * 12 * annual_discount_multiplier);
+    const annual_monthly_equivalent = Math.round(annual_amount_total / 12);
+
+    return res.status(200).json({
+      success: true,
+      account_count,
+      account_blocks,
+      tier,
+      billing_cycle,
+      base_rate_per_block,
+      monthly_amount,
+      annual_amount_total,
+      annual_monthly_equivalent,
+      discount_percent: 20,
+      support_level:
+        tier === 'growth'
+          ? 'Standard Email & Ticket Support (24h SLA)'
+          : tier === 'scale'
+            ? 'Priority 24/7 Support & Dedicated Onboarding Specialist (4h SLA)'
+            : 'Dedicated Account Manager, Custom Hardware Integration & Custom SLA',
+      features_included: [
+        'Full Campus OS Features (All Modules Unlocked)',
+        'Unlimited AI Concierge Queries',
+        'Realtime GPS Transit & Gate hardware sync',
+        'Automated NAAC / NBA / AISHE Accreditation Reports',
+        'Mobile App Access for Students, Parents & Staff'
+      ]
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: 'Internal server error calculating subscription.' });
+  }
+});
+
 // ========== PRICING MANAGEMENT (Institute Admin) ==========
 
 // GET /pricing/:institutionId — List all pricing plans for an institution
@@ -71,17 +132,20 @@ router.post('/pricing', requireRole(['Admin', 'SuperAdmin']), async (req: Reques
 
     const { data, error } = await supabaseAdmin
       .from('service_pricing')
-      .upsert({
-        institution_id,
-        service_type,
-        name,
-        description: description || null,
-        price,
-        duration_days: duration_days || 30,
-        features: features || [],
-        is_active: true,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'institution_id,service_type,name' })
+      .upsert(
+        {
+          institution_id,
+          service_type,
+          name,
+          description: description || null,
+          price,
+          duration_days: duration_days || 30,
+          features: features || [],
+          is_active: true,
+          updated_at: new Date().toISOString()
+        },
+        { onConflict: 'institution_id,service_type,name' }
+      )
       .select()
       .single();
 
@@ -120,7 +184,9 @@ router.get('/status/:studentId', async (req: Request, res: Response) => {
 
     let query = supabaseAdmin
       .from('service_subscriptions')
-      .select('id, service_type, start_date, end_date, amount_paid, status, pricing_id, service_pricing(name, price, features)')
+      .select(
+        'id, service_type, start_date, end_date, amount_paid, status, pricing_id, service_pricing(name, price, features)'
+      )
       .eq('student_id', studentId)
       .eq('status', 'active')
       .gte('end_date', today);
@@ -140,7 +206,7 @@ router.get('/status/:studentId', async (req: Request, res: Response) => {
         end_date: sub.end_date,
         amount_paid: sub.amount_paid,
         plan_name: (sub as any).service_pricing?.name || 'Unknown',
-        features: (sub as any).service_pricing?.features || [],
+        features: (sub as any).service_pricing?.features || []
       };
     }
 
@@ -234,11 +300,7 @@ router.post('/verify', async (req: Request, res: Response) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, student_id, pricing_id } = parse.data;
 
     // Fetch pricing plan
-    const { data: plan } = await supabaseAdmin
-      .from('service_pricing')
-      .select('*')
-      .eq('id', pricing_id)
-      .single();
+    const { data: plan } = await supabaseAdmin.from('service_pricing').select('*').eq('id', pricing_id).single();
 
     if (!plan) {
       return res.status(400).json({ success: false, error: 'Pricing plan not found.' });

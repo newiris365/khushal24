@@ -1,13 +1,26 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  MapPin, Phone, Mail, Globe, ArrowLeft, GraduationCap, School,
-  ExternalLink, AlertCircle, Loader2, ChevronRight, BookOpen, Building2
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  ArrowLeft,
+  GraduationCap,
+  School,
+  ExternalLink,
+  AlertCircle,
+  Loader2,
+  ChevronRight,
+  BookOpen,
+  Building2
 } from 'lucide-react';
+import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
 
 interface Institution {
   id: string;
@@ -86,7 +99,8 @@ export default function InstitutionDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] text-white selection:bg-[#6C2BD9]/40">
+    <div className="min-h-screen bg-slate-950 dark:bg-slate-950 light:bg-slate-50 text-slate-100 dark:text-slate-100 light:text-slate-900 transition-colors duration-300">
+      <Header />
       {/* Background effects */}
       <div className="fixed top-0 left-1/3 w-[600px] h-[600px] bg-[#6C2BD9]/8 rounded-full blur-[160px] pointer-events-none" />
 
@@ -137,17 +151,17 @@ export default function InstitutionDetailPage() {
 
               {/* Name / type */}
               <div className="flex-1 min-w-0">
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border mb-2 ${
-                  isSchool
-                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                    : 'bg-violet-500/10 border-violet-500/20 text-violet-400'
-                }`}>
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border mb-2 ${
+                    isSchool
+                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                      : 'bg-violet-500/10 border-violet-500/20 text-violet-400'
+                  }`}
+                >
                   {isSchool ? <School className="w-3 h-3" /> : <GraduationCap className="w-3 h-3" />}
                   {isSchool ? 'School' : 'College / University'}
                 </span>
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">
-                  {institution.name}
-                </h1>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">{institution.name}</h1>
               </div>
             </div>
           </div>
@@ -158,15 +172,15 @@ export default function InstitutionDetailPage() {
           {/* Info panel */}
           <div className="md:col-span-2 space-y-4">
             <div className="bg-[#13102A]/60 border border-white/10 rounded-2xl p-6">
-              <h2 className="text-sm font-bold text-[#C4B5FD] mb-4 uppercase tracking-wider">
-                Institution Details
-              </h2>
+              <h2 className="text-sm font-bold text-[#C4B5FD] mb-4 uppercase tracking-wider">Institution Details</h2>
               <dl className="space-y-3 text-sm">
                 {(institution.city || institution.state) && (
                   <div className="flex items-start gap-3">
                     <MapPin className="w-4 h-4 text-[#6C2BD9] mt-0.5 shrink-0" />
                     <div>
-                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">Location</dt>
+                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">
+                        Location
+                      </dt>
                       <dd className="text-white font-medium">
                         {[institution.city, institution.state].filter(Boolean).join(', ')}
                       </dd>
@@ -177,7 +191,9 @@ export default function InstitutionDetailPage() {
                   <div className="flex items-start gap-3">
                     <Building2 className="w-4 h-4 text-[#6C2BD9] mt-0.5 shrink-0" />
                     <div>
-                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">Address</dt>
+                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">
+                        Address
+                      </dt>
                       <dd className="text-white/80">{institution.address}</dd>
                     </div>
                   </div>
@@ -186,7 +202,9 @@ export default function InstitutionDetailPage() {
                   <div className="flex items-start gap-3">
                     <Phone className="w-4 h-4 text-[#6C2BD9] mt-0.5 shrink-0" />
                     <div>
-                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">Phone</dt>
+                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">
+                        Phone
+                      </dt>
                       <dd className="text-white/80">{institution.phone}</dd>
                     </div>
                   </div>
@@ -195,7 +213,9 @@ export default function InstitutionDetailPage() {
                   <div className="flex items-start gap-3">
                     <Mail className="w-4 h-4 text-[#6C2BD9] mt-0.5 shrink-0" />
                     <div>
-                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">Email</dt>
+                      <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">
+                        Email
+                      </dt>
                       <dd className="text-white/80">{institution.email}</dd>
                     </div>
                   </div>
@@ -203,7 +223,9 @@ export default function InstitutionDetailPage() {
                 <div className="flex items-start gap-3">
                   <Globe className="w-4 h-4 text-[#6C2BD9] mt-0.5 shrink-0" />
                   <div>
-                    <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">Type</dt>
+                    <dt className="text-[10px] text-[#C4B5FD]/40 uppercase tracking-wider font-semibold mb-0.5">
+                      Type
+                    </dt>
                     <dd className="text-white/80 capitalize">{institution.institute_type || institution.type}</dd>
                   </div>
                 </div>
@@ -244,9 +266,7 @@ export default function InstitutionDetailPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/5 py-8 px-6 bg-[#090615] text-center text-xs text-[#C4B5FD]/40 mt-10">
-        <p>© 2026 KSL Studio. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
