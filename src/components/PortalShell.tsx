@@ -118,6 +118,15 @@ const getNotifTypeColor = (type: string) => {
   }
 };
 
+function useSafePathname(): string {
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return usePathname() || '/';
+  } catch {
+    return '/';
+  }
+}
+
 export default function PortalShell({
   portalName,
   portalBadge,
@@ -125,7 +134,7 @@ export default function PortalShell({
   accentColor = '#6C2BD9',
   children
 }: PortalShellProps) {
-  const pathname = usePathname();
+  const pathname = useSafePathname();
   const [profile, setProfile] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [disabledFeatures, setDisabledFeatures] = useState<string[]>([]);

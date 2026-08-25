@@ -27,6 +27,15 @@ interface Message {
   };
 }
 
+function useSafePathname(): string {
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return usePathname() || '/';
+  } catch {
+    return '/';
+  }
+}
+
 export default function AIChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -37,7 +46,7 @@ export default function AIChatWidget() {
   const [sessionId, setSessionId] = useState<string>('');
   const [activeProvider, setActiveProvider] = useState<string>('');
   const [charCount, setCharCount] = useState(0);
-  const pathname = usePathname();
+  const pathname = useSafePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [confirmingActionIdx, setConfirmingActionIdx] = useState<number | null>(null);

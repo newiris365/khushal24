@@ -7,8 +7,17 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
+function useSafePathname(): string {
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return usePathname() || '/';
+  } catch {
+    return '/';
+  }
+}
+
 export default function Header() {
-  const pathname = usePathname();
+  const pathname = useSafePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
