@@ -11,12 +11,9 @@ import {
   School,
   Building2,
   ChevronRight,
-  Globe,
   Sparkles,
   Filter,
-  AlertCircle,
-  Loader2,
-  BookOpen
+  AlertCircle
 } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -183,59 +180,31 @@ export default function ApplicantHomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 dark:bg-slate-950 light:bg-slate-50 text-slate-100 dark:text-slate-100 light:text-slate-900 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Header />
       {/* Background effects */}
       <div className="fixed top-0 left-1/4 w-[700px] h-[700px] bg-[#6C2BD9]/8 rounded-full blur-[160px] pointer-events-none" />
       <div className="fixed top-1/2 right-0 w-[500px] h-[500px] bg-[#8B5CF6]/5 rounded-full blur-[180px] pointer-events-none" />
 
-      {/* ── Nav ── */}
-      <nav className="sticky top-0 z-50 border-b border-[#6C2BD9]/20 bg-[#0D0A1A]/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-          {/* Brand */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#6C2BD9] to-[#8B5CF6] flex items-center justify-center shadow-md shadow-[#6C2BD9]/30">
-              <BookOpen className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-extrabold text-base tracking-tight">
-              IRIS <span className="text-[#8B5CF6]">365</span>
-            </span>
-          </Link>
-
-          {/* Nav links */}
-          <div className="hidden sm:flex items-center gap-5 text-xs font-semibold text-[#C4B5FD]/70">
-            <Link href="/login" className="hover:text-white transition-colors">
-              Staff Login
-            </Link>
-            <Link
-              href="/login"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#6C2BD9] to-[#8B5CF6] text-white font-bold hover:brightness-110 transition-all"
-            >
-              Login
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* ── Hero ── */}
-      <section className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-12 text-center">
+      <section className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-28 md:pt-36 pb-12 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#6C2BD9]/20 border border-[#6C2BD9]/40 text-[#A78BFA] text-[11px] font-mono mb-6 uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           Admissions 2026–27 Now Open
         </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-[#E0E7FF] to-[#A78BFA] bg-clip-text text-transparent leading-tight mb-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-transparent dark:bg-gradient-to-r dark:from-white dark:via-[#E0E7FF] dark:to-[#A78BFA] dark:bg-clip-text leading-tight mb-4">
           Find Your Institution,
           <br />
           Start Your Journey
         </h1>
-        <p className="text-[#C4B5FD]/60 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+        <p className="text-slate-600 dark:text-[#C4B5FD]/60 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
           Browse colleges and schools, explore programmes, and apply directly — all in one place.
         </p>
       </section>
 
       {/* ── Filters ── */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-6">
-        <div className="bg-[#13102A]/80 border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+        <div className="bg-white dark:bg-[#13102A]/80 border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center shadow-md dark:shadow-none">
           {/* Search */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6C2BD9]" />
@@ -245,7 +214,7 @@ export default function ApplicantHomePage() {
               placeholder="Search by name, city or state…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 bg-black/30 border border-white/10 rounded-xl text-sm text-white placeholder:text-white/30 outline-none focus:border-[#6C2BD9]/60 transition-colors"
+              className="w-full pl-9 pr-4 py-2.5 bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/30 outline-none focus:border-[#6C2BD9]/60 transition-colors"
             />
           </div>
 
@@ -256,7 +225,7 @@ export default function ApplicantHomePage() {
               id="city-filter"
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="pl-8 pr-8 py-2.5 bg-black/30 border border-white/10 rounded-xl text-sm text-white outline-none focus:border-[#6C2BD9]/60 transition-colors appearance-none cursor-pointer min-w-[160px]"
+              className="pl-8 pr-8 py-2.5 bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white outline-none focus:border-[#6C2BD9]/60 transition-colors appearance-none cursor-pointer min-w-[160px]"
             >
               <option value="">All Cities</option>
               {allCities.map((city) => (
@@ -268,7 +237,7 @@ export default function ApplicantHomePage() {
           </div>
 
           {/* Type tabs */}
-          <div className="flex rounded-xl overflow-hidden border border-white/10 shrink-0">
+          <div className="flex rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 shrink-0">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
@@ -281,7 +250,7 @@ export default function ApplicantHomePage() {
                 className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-semibold transition-all ${
                   activeTab === tab.key
                     ? 'bg-[#6C2BD9] text-white'
-                    : 'bg-black/20 text-[#C4B5FD]/60 hover:text-white hover:bg-white/5'
+                    : 'bg-slate-100 dark:bg-black/20 text-slate-600 dark:text-[#C4B5FD]/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5'
                 }`}
               >
                 {tab.icon}
@@ -296,7 +265,7 @@ export default function ApplicantHomePage() {
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-20">
         {/* Count row */}
         {!loading && !error && (
-          <div className="flex items-center gap-2 mb-5 text-xs text-[#C4B5FD]/50">
+          <div className="flex items-center gap-2 mb-5 text-xs text-slate-500 dark:text-[#C4B5FD]/50">
             <Filter className="w-3.5 h-3.5" />
             <span>
               {filtered.length === 0
@@ -336,7 +305,7 @@ export default function ApplicantHomePage() {
             <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl">
               🏛️
             </div>
-            <p className="text-sm text-[#C4B5FD]/60 max-w-xs">
+            <p className="text-sm text-slate-600 dark:text-[#C4B5FD]/60 max-w-xs">
               No institutions are listed here yet.
               {searchQuery || selectedCity ? ' Try clearing your filters.' : ' Check back soon.'}
             </p>
@@ -346,7 +315,7 @@ export default function ApplicantHomePage() {
                   setSearchQuery('');
                   setSelectedCity('');
                 }}
-                className="px-4 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all"
+                className="px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-900 dark:text-white transition-all"
               >
                 Clear Filters
               </button>
