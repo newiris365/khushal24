@@ -57,7 +57,7 @@ export default function RootLayout({
       lang="en"
       className={`scroll-smooth ${inter.variable} ${orbitron.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="bg-[#0D0A1A] text-white antialiased font-sans selection:bg-[#6C2BD9]">
+      <body className="bg-slate-50 dark:bg-[#050010] text-slate-900 dark:text-slate-100 antialiased font-sans selection:bg-[#6C2BD9]">
         {children}
         <AIChatWidget />
       </body>
