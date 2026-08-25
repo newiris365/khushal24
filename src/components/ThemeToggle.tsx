@@ -10,11 +10,13 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('iris_theme') as 'dark' | 'light' | null;
-    if (saved === 'light' || saved === 'dark') {
-      setTheme(saved);
-      document.documentElement.classList.remove('dark', 'light');
-      document.documentElement.classList.add(saved);
+    if (saved === 'light') {
+      setTheme('light');
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     } else {
+      setTheme('dark');
+      document.documentElement.classList.remove('light');
       document.documentElement.classList.add('dark');
     }
   }, []);
@@ -23,8 +25,13 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     localStorage.setItem('iris_theme', nextTheme);
-    document.documentElement.classList.remove('dark', 'light');
-    document.documentElement.classList.add(nextTheme);
+    if (nextTheme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    }
   };
 
   if (!mounted) {
@@ -36,8 +43,8 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
       onClick={toggleTheme}
       className={`p-2 rounded-xl transition-all duration-300 border ${
         theme === 'dark'
-          ? 'bg-slate-900/80 border-slate-700/60 text-amber-400 hover:bg-slate-800 hover:border-amber-400/40 shadow-inner'
-          : 'bg-white border-slate-300 text-indigo-600 hover:bg-slate-100 hover:border-indigo-400 shadow-sm'
+          ? 'bg-[#080512] border-white/10 text-amber-400 hover:bg-white/10 hover:border-amber-400/40 shadow-inner'
+          : 'bg-white border-slate-300 text-purple-700 hover:bg-slate-100 hover:border-purple-400 shadow-sm'
       } ${className}`}
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       aria-label="Toggle visual color theme"

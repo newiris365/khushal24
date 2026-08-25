@@ -385,7 +385,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050010] dark:bg-[#050010] light:bg-slate-50 text-slate-100 dark:text-slate-100 light:text-slate-900 transition-colors duration-300 flex flex-col font-sans antialiased overflow-x-hidden relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#050010] text-slate-900 dark:text-slate-100 transition-colors duration-300 flex flex-col font-sans antialiased overflow-x-hidden relative">
       {/* Background Video */}
       {videoReady && (
         <video

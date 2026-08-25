@@ -41,7 +41,7 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#050010]/90 dark:bg-[#050010]/90 light:bg-white/90 backdrop-blur-md border-b border-[#8A2BE2]/20 dark:border-[#8A2BE2]/20 light:border-slate-200/80 shadow-lg shadow-[#8A2BE2]/5 py-3.5'
+          ? 'bg-white/90 dark:bg-[#050010]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-[#8A2BE2]/20 shadow-lg shadow-black/5 py-3.5'
           : 'bg-transparent py-5'
       }`}
     >
@@ -58,11 +58,11 @@ export default function Header() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-heading font-extrabold text-xl tracking-tight text-white dark:text-white light:text-slate-900 flex items-center gap-1">
+            <span className="font-heading font-extrabold text-xl tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
               <span>IRIS</span>
-              <span className="text-purple-400 font-mono">365</span>
+              <span className="text-purple-600 dark:text-purple-400 font-mono">365</span>
             </span>
-            <span className="text-xs font-mono tracking-wider text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase -mt-0.5">Campus OS</span>
+            <span className="text-xs font-mono tracking-wider text-slate-500 dark:text-slate-400 uppercase -mt-0.5">Campus OS</span>
           </div>
         </Link>
 
@@ -76,8 +76,8 @@ export default function Header() {
                 href={link.href}
                 className={`text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 ${
                   isActive
-                    ? 'text-purple-300 dark:text-purple-300 light:text-purple-700 font-bold'
-                    : 'text-slate-300 dark:text-slate-300 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-purple-600'
+                    ? 'text-purple-700 dark:text-purple-300 font-bold'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-white'
                 }`}
               >
                 {link.label}
@@ -94,7 +94,7 @@ export default function Header() {
           <ThemeToggle />
           <Link
             href="/login?fresh=1"
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 dark:text-slate-300 light:text-slate-700 hover:text-white dark:hover:text-white light:hover:text-slate-900 bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 dark:border-white/10 light:border-slate-200 hover:border-purple-500/40 transition-all"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-purple-500/40 transition-all"
           >
             Sign In
           </Link>
@@ -112,7 +112,7 @@ export default function Header() {
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl bg-white/5 text-slate-300 hover:text-white border border-white/10"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -122,7 +122,7 @@ export default function Header() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed top-[68px] left-0 right-0 bg-[#050010]/95 dark:bg-[#050010]/95 light:bg-white/95 backdrop-blur-xl border-b border-[#8A2BE2]/20 p-6 shadow-2xl flex flex-col gap-4 z-50">
+        <div className="lg:hidden fixed top-[68px] left-0 right-0 bg-white/95 dark:bg-[#050010]/95 backdrop-blur-xl border-b border-slate-200 dark:border-[#8A2BE2]/20 p-6 shadow-2xl flex flex-col gap-4 z-50">
           <nav className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <Link
@@ -131,8 +131,8 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`text-xs font-semibold py-2 px-3 rounded-lg transition-colors ${
                   pathname === link.href
-                    ? 'bg-[#8A2BE2]/10 text-purple-300 font-bold'
-                    : 'text-slate-300 dark:text-slate-300 light:text-slate-700 hover:bg-white/5'
+                    ? 'bg-[#8A2BE2]/10 text-purple-700 dark:text-purple-300 font-bold'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
                 }`}
               >
                 {link.label}
@@ -140,11 +140,11 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5">
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2.5">
             <Link
               href="/login?fresh=1"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 rounded-xl border border-white/10 bg-white/5 text-slate-200 font-semibold text-xs"
+              className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-200 font-semibold text-xs"
             >
               Sign In
             </Link>
