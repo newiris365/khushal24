@@ -383,7 +383,7 @@ export default function LandingPage() {
             href="/home"
             className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] text-white font-bold text-sm shadow-xl shadow-[#06B6D4]/10 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
           >
-            <GraduationCap className="w-4 h-4" /> Apply for Admissions
+            <GraduationCap className="w-4 h-4" /> Explore Institutions
           </Link>
           <Link
             href="/login?fresh=1"

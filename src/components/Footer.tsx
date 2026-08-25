@@ -56,13 +56,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/admissions" className="hover:text-indigo-400 transition-colors">
-                  Admissions Portal
+                <Link href="/home" className="hover:text-indigo-400 transition-colors">
+                  Explore Institutions
                 </Link>
               </li>
               <li>
-                <Link href="/institutions" className="hover:text-indigo-400 transition-colors">
-                  Partner Institutions
+                <Link href="/request-demo" className="hover:text-indigo-400 transition-colors">
+                  Request Interactive Demo
                 </Link>
               </li>
             </ul>
@@ -75,23 +75,23 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/company" className="hover:text-indigo-400 transition-colors">
-                  Placement & Careers
+                <Link href="/about" className="hover:text-indigo-400 transition-colors">
+                  Platform Architecture
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="hover:text-indigo-400 transition-colors">
-                  Campus Events
+                <Link href="/contact" className="hover:text-indigo-400 transition-colors">
+                  Enterprise Contact
                 </Link>
               </li>
               <li>
-                <Link href="/gallery" className="hover:text-indigo-400 transition-colors">
-                  Photo & Campus Gallery
+                <Link href="/login" className="hover:text-indigo-400 transition-colors">
+                  Campus Staff Sign In
                 </Link>
               </li>
               <li>
                 <Link href="/request-demo" className="hover:text-indigo-400 transition-colors">
-                  Request Interactive Demo
+                  Schedule Guided Demo
                 </Link>
               </li>
             </ul>

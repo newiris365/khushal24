@@ -24,9 +24,7 @@ export default function Header() {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/pricing', label: 'Pricing' },
-    { href: '/admissions', label: 'Admissions' },
-    { href: '/institutions', label: 'Institutions' },
-    { href: '/company', label: 'Company' },
+    { href: '/home', label: 'Explore Institutions' },
     { href: '/contact', label: 'Contact' }
   ];
 
