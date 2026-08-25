@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { Inter, Orbitron, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
@@ -40,7 +40,10 @@ const AIChatWidget = dynamic(() => import('../components/AIChatWidget'), {
 export const metadata: Metadata = {
   title: 'IRIS 365 | Next-Gen Campus Operating System',
   description: 'AI-powered automation platform for modern educational institutions.',
-  manifest: '/manifest.json',
+  manifest: '/manifest.json'
+};
+
+export const viewport: Viewport = {
   themeColor: '#0f172a'
 };
 
